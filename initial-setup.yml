@@ -1,0 +1,55 @@
+---
+- name: Initial setup for flashing OpenWRT to Mikrotik Device
+  hosts: config_server
+  become: True
+  become_user: root
+  become_method: sudo
+
+  vars:
+    tftp_root: /var/tftproot
+    web_root: /var/www/html
+    load_script: loader.sh
+    go_dest: /home/vagrant
+    initramfs_file: openwrt-ar71xx-mikrotik-vmlinux-initramfs.elf
+    openwrt_p_zip: openwrt-ar71xx-mikrotik-rootfs.tar.gz
+    openwrt_p_elf: openwrt-ar71xx-mikrotik-vmlinux-lzma.elf
+
+  tasks:
+    - name: install dnsmasq
+      apt: name=dnsmasq update_cache=yes cache_valid_time=3600
+    
+    - name: stop dnsmasq service
+      service: name=dnsmasq state=stopped enabled=no
+
+    - name: create tftproot directory
+      file: path={{ tftp_root }} state=directory
+
+    - name: copy bootloader script
+      template: src=templates/{{ load_script }} dest={{ tftp_root }} owner=root mode=0777
+
+    - name: copy go script
+      template: src=templates/go.sh dest={{ go_dest }} owner=root mode=0777
+
+    - name: copy initramfs file
+      copy: src=files/{{ initramfs_file }} dest={{ tftp_root }} owner=root mode=0644
+
+    - name: install lighttpd
+      apt: name=lighttpd
+
+    - name: enable lighttpd service
+      service: name=lighttpd state=started enabled=yes
+
+    - name: copy lighttpd config file
+      copy: src=files/lighttpd.conf dest=/etc/lighttpd/lighttpd.conf owner=root mode=0600
+      notify: restart lighttpd
+
+    - name: copy permenant openwrt zip file
+      copy: src=files/{{ openwrt_p_zip }} dest={{ web_root }} 
+
+    - name: copy permenant openwrt elf file
+      copy: src=files/{{ openwrt_p_elf }} dest={{ web_root }} 
+
+  handlers:
+    - name: restart lighttpd
+      service: name=lighttpd state=restarted
+
