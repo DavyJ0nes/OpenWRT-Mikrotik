@@ -13,11 +13,11 @@ Yes, I could have just baked all this into a vagrant box but I wanted it to be e
 
 Before you begin bootstrapping your Mikrotik RB 951 2HnD you will need the following avaiable and/or installed on your Control Laptop
 
-  - Mikrotik RB951 2HnD device (ensure it is not the hAP device)
-  - Control Laptop with either 2 x Ethernet adapters or a secondary laptop. I'm using a MBP with 2 x Thunderbolt-to-Ethernet Adapters.
+  - Mikrotik RB951 2HnD device (ensure it is not the hAP device) [This is the one we want](http://routerboard.com/RB951Ui-2HnD)
+  - Control Laptop with either 2 x Ethernet adapters or a secondary laptop. I'm using a MBP with 2 x Thunderbolt-to-Ethernet Adapters. **(only one shown below)**
+  - 2 x Ethernet cables
   - Ansible installed on Control Laptop (see [Installing Ansible](http://docs.ansible.com/ansible/intro_installation.html) )
   - Vagrant installed on Control Laptop (see [Installing Vagrant](https://www.vagrantup.com/docs/installation/) )
-  - 2 x Ethernet cables
   - [This Repository](http://github.com/DavyJ0nes/OpenWRT-Mikrotik)
 
 ![Required kit](docs/kit.jpg)
